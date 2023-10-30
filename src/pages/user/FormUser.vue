@@ -52,7 +52,7 @@
 
       <div class="col-12 q-gutter-sm">
         <q-btn
-          label="Grabar"
+          label="Guardar"
           type="submit"
           color="primary"
           class="float-right"
@@ -112,7 +112,6 @@ export default defineComponent({
     const post = async (form) => {
       try {
         const { data } = await api.post("users", form.value);
-        console.log("datos guardar:" + data.data);
         return data.data;
       } catch (error) {
         throw new Error(error);
@@ -127,7 +126,7 @@ export default defineComponent({
           icon: "check",
           color: "positive",
         });
-        router.push({ name: "home" });
+        router.push({ name: "User" });
         return data.data;
       } catch (error) {
         throw new Error(error);
@@ -152,7 +151,7 @@ export default defineComponent({
           icon: "check",
           color: "positive",
         });
-        router.push({ name: "user" });
+        router.push({ name: "User" });
       }
     };
 

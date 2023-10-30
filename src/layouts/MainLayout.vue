@@ -19,87 +19,86 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <q-item
+          clickable
+          v-for="menu in menus"
+          :key="menu.codm"
+          @click="selectMenu(menu)"
+        >
+          <q-item-section>
+            <q-item-label>{{ menu.nombre }}</q-item-label>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-icon :name="menu.icon" />
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <q-page>
+        <router-view :menus="selectedMenu ? selectedMenu.submenus : []" />
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import EssentialLink from "components/EssentialLink.vue";
-
-const linksList = [
-  {
-    title: "Docs",
-    caption: "quasar.dev",
-    icon: "school",
-    link: "https://quasar.dev",
-  },
-  {
-    title: "Github",
-    caption: "github.com/quasarframework",
-    icon: "code",
-    link: "https://github.com/quasarframework",
-  },
-  {
-    title: "Discord Chat Channel",
-    caption: "chat.quasar.dev",
-    icon: "chat",
-    link: "https://chat.quasar.dev",
-  },
-  {
-    title: "Forum",
-    caption: "forum.quasar.dev",
-    icon: "record_voice_over",
-    link: "https://forum.quasar.dev",
-  },
-  {
-    title: "Twitter",
-    caption: "@quasarframework",
-    icon: "rss_feed",
-    link: "https://twitter.quasar.dev",
-  },
-  {
-    title: "Facebook",
-    caption: "@QuasarFramework",
-    icon: "public",
-    link: "https://facebook.quasar.dev",
-  },
-  {
-    title: "Quasar Awesome",
-    caption: "Community Quasar projects",
-    icon: "favorite",
-    link: "https://awesome.quasar.dev",
-  },
-];
-
+import { defineComponent, ref, watch, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { api } from "boot/axios";
 export default defineComponent({
   name: "MainLayout",
 
-  components: {
-    EssentialLink,
-  },
-
   setup() {
     const leftDrawerOpen = ref(false);
+    const menus = ref([]);
+    const selectedMenu = ref(null);
+
+    const router = useRouter();
+
+    const fetchMenus = async (roleId) => {
+      // Realiza una llamada al servidor para obtener los menús y submenús según el rol seleccionado
+      try {
+        console.log(`rolescontroller/roles/${roleId}`);
+        //http://127.0.0.1:8080/rolescontroller/roles/4
+        const response = await api.get(`rolescontroller/roles/${roleId}`); // Reemplaza fetchMenusFromServer con tu lógica real
+        menus.value = response.data; // Asumiendo que la respuesta contiene una lista de menús
+      } catch (error) {
+        console.error("Error al obtener los menús:", error);
+      }
+    };
+
+    watch(
+      () => router.currentRoute.value,
+      (to, from) => {
+        selectedMenu.value = null; // Restablecer el menú seleccionado al cambiar la ruta
+      }
+    );
+
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+    };
+
+    const selectMenu = (menu) => {
+      selectedMenu.value = menu;
+      // Puedes redirigir a la página de procesos asociados al menú seleccionado aquí
+      // Utiliza "menu.codm" para obtener el ID del menú seleccionado y construir la URL adecuada
+      // Ejemplo: router.push({ name: "procesos", params: { menuId: menu.codm } });
+    };
+
+    // Carga los menús al cargar el componente
+    onMounted(() => {
+      // Reemplaza 'roleId' con el ID del rol seleccionado o la lógica que necesites
+      fetchMenus(4);
+    });
 
     return {
-      essentialLinks: linksList,
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
+      menus,
+      selectedMenu,
+      toggleLeftDrawer,
+      selectMenu,
     };
   },
 });

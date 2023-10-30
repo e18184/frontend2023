@@ -9,14 +9,14 @@
         outlined
         v-model="form.field"
         :options="selectOptions"
-        label="Field"
+        label="Campo a Buscar"
         class="col-lg-5 col-xs-12"
         type="text"
       />
       <q-input
         filled
         v-model="form.query"
-        label="Your query"
+        label="Filtrar"
         class="col-lg-5 col-xs-12"
       />
       <div class="row align-center col-lg-2 col-xs-12">
@@ -31,7 +31,7 @@
     <q-table title="Users" :rows="users" :columns="columns" row-key="name">
       <template v-slot:top>
         <q-space />
-        <q-btn color="primary" label="Add user" :to="{ name: 'FormUser' }" />
+        <q-btn color="primary" label="Add usuario" :to="{ name: 'FormUser' }" />
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-sm">
@@ -155,7 +155,7 @@ export default defineComponent({
         }).onOk(async () => {
           await remove(id);
           $q.notify({
-            message: "User deleted",
+            message: "Usuario",
             icon: "check",
             color: "positive",
           });

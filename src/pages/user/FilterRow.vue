@@ -25,11 +25,11 @@
       <div class="col-12 padding q-gutter-sm">
         <q-space />
         <q-btn
-          label="Back"
+          label="Atras"
           color="white"
           class="float-right"
           text-color="primary"
-          :to="{ name: 'home' }"
+          :to="{ name: 'User' }"
         />
       </div>
     </div>
@@ -94,14 +94,19 @@ export default defineComponent({
     const $q = useQuasar();
 
     const handleEditUser = async (id) => {
-      $router.push({ name: "formUser", params: { id } });
+      $router.push({ name: "FormUser", params: { id } });
     };
 
     const getUsers = async () => {
       try {
         const { model, query } = $route.query;
-        const { data } = await api.get(`users/?${model}=${query}`);
-        users.value = data.data;
+        console.log("model:" + `users/users?model=${model}&query=${query}`);
+
+        const response = await api.get(
+          `users/users?model=${model}&query=${query}`
+        );
+        const data = response.data;
+        users.value = data;
       } catch (error) {
         $q.notify({
           message: "Error User not found",
@@ -123,6 +128,7 @@ export default defineComponent({
 
     const handleDeleteUser = async (id) => {
       try {
+        alert(id);
         $q.dialog({
           dark: true,
           title: "Confirm",
@@ -132,11 +138,12 @@ export default defineComponent({
         }).onOk(async () => {
           await remove(id);
           $q.notify({
-            message: "User deleted",
+            message: "Usuario Eliminado",
             icon: "check",
             color: "positive",
           });
-          $router.push({ name: "home" });
+          await getUsers();
+          $router.push({ name: "User" });
         });
       } catch (error) {
         $q.notify({

@@ -23,7 +23,7 @@ const routes = [
       {
         path: "form-filter",
         name: "formFilter",
-        component: () => import("pages/FilterRow.vue"),
+        component: () => import("pages/user/FilterRow.vue"),
       },
     ],
   },
