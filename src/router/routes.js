@@ -10,6 +10,7 @@ const routes = [
         name: "Usuarios",
         component: () => import("pages/usuarios/Usuarios.vue"),
       },
+      // manera la clase users
       {
         path: "user",
         name: "User",
@@ -25,6 +26,8 @@ const routes = [
         name: "formFilter",
         component: () => import("pages/user/FilterRow.vue"),
       },
+      // manejar la clase rolesformFilter
+      //  menusformFilter
     ],
   },
 

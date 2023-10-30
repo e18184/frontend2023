@@ -80,7 +80,7 @@ export default defineComponent({
       {
         name: "name",
         field: "name",
-        label: "Name",
+        label: "Nombre",
         sortable: true,
         align: "left",
       },
@@ -118,6 +118,7 @@ export default defineComponent({
 
     const getUsers = async () => {
       try {
+        // si para menus const response = await api.get("menuscontroller");
         const response = await api.get("users");
 
         const data = response.data;
